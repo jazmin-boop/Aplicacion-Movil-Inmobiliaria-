@@ -46,10 +46,10 @@ Aplicación móvil nativa para Android desarrollada en **Java y Material Design 
 ##  Pantallas y Modales Overview
 
 Todos los módulos integran el diseño base estandarizado con:
-- **Botón Ojito **: Apertura directa del modal de resumen/detalles.
-- **Botón Lápiz **: Apertura del formulario de edición.
-- **Botón Tacho **: Eliminación con confirmación.
-- **Botón "Cerrar"**: Salida limpia y consistente en la barra superior e inferior.
+- Botón Ojito: Apertura directa del modal de resumen/detalles.
+- Botón Lápiz: Apertura del formulario de edición.
+- Botón Tacho : Eliminación con confirmación.
+- Botón "Cerrar: Salida limpia y consistente en la barra superior e inferior.
 
 ---
 
