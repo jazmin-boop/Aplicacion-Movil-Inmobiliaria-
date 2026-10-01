@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Inmobiliaria</string>
+    <string name="nav_propiedades">Propiedades</string>
+    <string name="nav_clientes">Clientes</string>
+    <string name="nav_agentes">Agentes</string>
+    <string name="nav_visitas">Visitas</string>
+    <string name="nav_ventas">Ventas</string>
+</resources>
