@@ -64,6 +64,12 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+
     private void navigateTo(Fragment fragment) {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).openModule(fragment);

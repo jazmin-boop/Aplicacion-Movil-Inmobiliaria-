@@ -102,6 +102,12 @@ public class VentasFragment extends Fragment implements VentaAdapter.OnVentaActi
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+
     private void loadData() {
         listaVentas = dbHelper.getAllVentas();
 
@@ -418,9 +424,10 @@ public class VentasFragment extends Fragment implements VentaAdapter.OnVentaActi
                 Venta nueva = new Venta(selProp.getId(), selCli.getId(), selAge.getId(), fechaVenta, monto, comision);
                 nueva.setMetodoPago(metodoSel);
                 dbHelper.insertVenta(nueva);
-                selProp.setEstado("Vendido");
-                dbHelper.updatePropiedad(selProp);
-
+                if (selProp != null) {
+                    selProp.setEstado("Vendido");
+                    dbHelper.updatePropiedad(selProp);
+                }
                 Toast.makeText(getContext(), "Venta registrada correctamente", Toast.LENGTH_SHORT).show();
             } else {
                 ventaToEdit.setIdPropiedad(selProp.getId());
@@ -431,6 +438,10 @@ public class VentasFragment extends Fragment implements VentaAdapter.OnVentaActi
                 ventaToEdit.setComision(comision);
                 ventaToEdit.setMetodoPago(metodoSel);
                 dbHelper.updateVenta(ventaToEdit);
+                if (selProp != null) {
+                    selProp.setEstado("Vendido");
+                    dbHelper.updatePropiedad(selProp);
+                }
                 Toast.makeText(getContext(), "Venta actualizada correctamente", Toast.LENGTH_SHORT).show();
             }
 

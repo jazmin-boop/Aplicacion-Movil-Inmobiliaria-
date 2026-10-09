@@ -148,6 +148,12 @@ public class ClientesFragment extends Fragment implements ClienteAdapter.OnClien
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+
     private void loadData() {
         listaClientes = dbHelper.getAllClientes();
 

@@ -102,6 +102,12 @@ public class VisitasFragment extends Fragment implements VisitaAdapter.OnVisitaA
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+
     private void loadData() {
         listaVisitas = dbHelper.getAllVisitas();
 

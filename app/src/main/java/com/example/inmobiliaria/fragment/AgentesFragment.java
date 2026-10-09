@@ -146,6 +146,12 @@ public class AgentesFragment extends Fragment implements AgenteAdapter.OnAgenteA
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
+    }
+
     private void loadData() {
         listaAgentes = dbHelper.getAllAgentes();
 

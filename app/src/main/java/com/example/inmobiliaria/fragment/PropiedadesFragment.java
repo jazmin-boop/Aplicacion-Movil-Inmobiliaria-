@@ -26,7 +26,10 @@ import com.bumptech.glide.Glide;
 import com.example.inmobiliaria.R;
 import com.example.inmobiliaria.adapter.PropiedadAdapter;
 import com.example.inmobiliaria.database.DatabaseHelper;
+import com.example.inmobiliaria.model.Agente;
+import com.example.inmobiliaria.model.Cliente;
 import com.example.inmobiliaria.model.Propiedad;
+import com.example.inmobiliaria.model.Venta;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -98,6 +101,12 @@ public class PropiedadesFragment extends Fragment implements PropiedadAdapter.On
         loadData();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData();
     }
 
     private void setupQuickPillsAndTrends(View view) {
@@ -412,9 +421,11 @@ public class PropiedadesFragment extends Fragment implements PropiedadAdapter.On
             String tipoSelected = spTipo.getSelectedItem() != null ? spTipo.getSelectedItem().toString() : tipos[0];
             String estadoSelected = spEstado.getSelectedItem() != null ? spEstado.getSelectedItem().toString() : estados[0];
 
+            int targetPropId = 0;
             if (propiedadToEdit == null) {
                 Propiedad nueva = new Propiedad(titulo, direccion, precio, tipoSelected, estadoSelected, imgUrl);
-                dbHelper.insertPropiedad(nueva);
+                long newId = dbHelper.insertPropiedad(nueva);
+                targetPropId = (int) newId;
                 Toast.makeText(getContext(), "Propiedad registrada correctamente", Toast.LENGTH_SHORT).show();
             } else {
                 propiedadToEdit.setTitulo(titulo);
@@ -424,7 +435,20 @@ public class PropiedadesFragment extends Fragment implements PropiedadAdapter.On
                 propiedadToEdit.setEstado(estadoSelected);
                 propiedadToEdit.setImagenUrl(imgUrl);
                 dbHelper.updatePropiedad(propiedadToEdit);
+                targetPropId = propiedadToEdit.getId();
                 Toast.makeText(getContext(), "Propiedad actualizada correctamente", Toast.LENGTH_SHORT).show();
+            }
+
+            if ("Vendido".equalsIgnoreCase(estadoSelected) && targetPropId > 0) {
+                if (!dbHelper.hasVentaForPropiedad(targetPropId)) {
+                    List<Cliente> clientes = dbHelper.getAllClientes();
+                    List<Agente> agentes = dbHelper.getAllAgentes();
+                    int cliId = !clientes.isEmpty() ? clientes.get(0).getId() : 1;
+                    int ageId = !agentes.isEmpty() ? agentes.get(0).getId() : 1;
+                    Venta autoV = new Venta(targetPropId, cliId, ageId, "2026-10-09", precio, precio * 0.03);
+                    autoV.setMetodoPago("Transferencia");
+                    dbHelper.insertVenta(autoV);
+                }
             }
 
             loadData();

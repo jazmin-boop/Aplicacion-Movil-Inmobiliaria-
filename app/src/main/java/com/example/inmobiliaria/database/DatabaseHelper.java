@@ -471,6 +471,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // ==========================================
     public long insertVenta(Venta v) {
         SQLiteDatabase db = this.getWritableDatabase();
+        if (v.getIdPropiedad() > 0 && hasVentaForPropiedad(v.getIdPropiedad())) {
+            ContentValues values = new ContentValues();
+            values.put(KEY_VEN_ID_CLIENTE, v.getIdCliente());
+            values.put(KEY_VEN_ID_AGENTE, v.getIdAgente());
+            values.put(KEY_VEN_FECHA_VENTA, v.getFechaVenta());
+            values.put(KEY_VEN_MONTO_FINAL, v.getMontoFinal());
+            values.put(KEY_VEN_COMISION, v.getComision());
+            if (v.getMetodoPago() != null) {
+                values.put(KEY_VEN_METODO_PAGO, v.getMetodoPago());
+            }
+            return db.update(TABLE_VENTAS, values, KEY_VEN_ID_PROPIEDAD + " = ?", new String[]{String.valueOf(v.getIdPropiedad())});
+        }
+
         ContentValues values = new ContentValues();
         values.put(KEY_VEN_ID_PROPIEDAD, v.getIdPropiedad());
         values.put(KEY_VEN_ID_CLIENTE, v.getIdCliente());
@@ -536,5 +549,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public int deleteVenta(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_VENTAS, KEY_ID + " = ?", new String[]{String.valueOf(id)});
+    }
+
+    public boolean hasVentaForPropiedad(int propId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT " + KEY_ID + " FROM " + TABLE_VENTAS + " WHERE " + KEY_VEN_ID_PROPIEDAD + " = ?", new String[]{String.valueOf(propId)});
+        boolean exists = cursor.moveToFirst();
+        cursor.close();
+        return exists;
     }
 }
