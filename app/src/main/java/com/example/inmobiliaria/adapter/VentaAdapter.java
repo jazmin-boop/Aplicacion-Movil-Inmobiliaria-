@@ -4,11 +4,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.inmobiliaria.R;
 import com.example.inmobiliaria.model.Venta;
 
@@ -46,6 +48,19 @@ public class VentaAdapter extends RecyclerView.Adapter<VentaAdapter.VentaViewHol
     @Override
     public void onBindViewHolder(@NonNull VentaViewHolder holder, int position) {
         Venta item = lista.get(position);
+
+        if (holder.ivPropiedad != null) {
+            if (item.getImagenUrlPropiedad() != null && !item.getImagenUrlPropiedad().trim().isEmpty()) {
+                Glide.with(holder.itemView.getContext())
+                        .load(item.getImagenUrlPropiedad())
+                        .placeholder(R.drawable.ic_placeholder)
+                        .error(R.drawable.ic_placeholder)
+                        .into(holder.ivPropiedad);
+            } else {
+                holder.ivPropiedad.setImageResource(R.drawable.ic_placeholder);
+            }
+        }
+
         holder.tvPropiedad.setText(item.getTituloPropiedad() != null ? item.getTituloPropiedad() : "Propiedad ID: " + item.getIdPropiedad());
 
         String clienteAgente = (item.getNombreCliente() != null ? item.getNombreCliente() : "-") +
@@ -83,11 +98,13 @@ public class VentaAdapter extends RecyclerView.Adapter<VentaAdapter.VentaViewHol
     }
 
     static class VentaViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivPropiedad;
         TextView tvPropiedad, tvClienteAgente, tvFecha, tvMonto, tvComision;
         ImageButton btnView, btnEdit, btnDelete;
 
         public VentaViewHolder(@NonNull View itemView) {
             super(itemView);
+            ivPropiedad = itemView.findViewById(R.id.ivPropiedad);
             tvPropiedad = itemView.findViewById(R.id.tvPropiedad);
             tvClienteAgente = itemView.findViewById(R.id.tvClienteAgente);
             tvFecha = itemView.findViewById(R.id.tvFecha);
